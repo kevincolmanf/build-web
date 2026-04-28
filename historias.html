@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historias IG - Build</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <!-- Librería moderna y nativa para descargar en Alta Calidad sin deformar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Montserrat', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #222; }
+        .story {
+            width: 1080px; /* Resolución nativa de Instagram */
+            height: 1920px;
+            transform: scale(0.35); /* Lo achicamos visualmente para que entre en la pantalla */
+            transform-origin: top left;
+        }
+        .story-container {
+            width: 378px; /* 1080 * 0.35 */
+            height: 672px; /* 1920 * 0.35 */
+            position: relative;
+        }
+        .brutalist-border { 
+            border: 12px solid #fff; 
+            box-shadow: 30px 30px 0px #000; 
+        }
+        .border-black-brutalist {
+            border: 12px solid #000;
+        }
+        .text-stroke {
+            -webkit-text-stroke: 6px #fff;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased p-10 overflow-x-auto">
+
+    <div class="mb-10 text-white">
+        <h1 class="text-4xl font-black uppercase tracking-tighter">Generador de Historias (Alta Resolución)</h1>
+        <p class="font-bold text-gray-400 mt-2 mb-4">Haz clic en el botón de abajo para seleccionar tus 5 fotos. Se aplicarán automáticamente sin importar cómo se llamen o si son jpg/jpeg/png.</p>
+        <input type="file" id="image-loader" multiple accept="image/*" class="block w-full text-sm text-gray-400 file:mr-4 file:py-3 file:px-6 file:rounded-lg file:border-0 file:font-black file:uppercase file:bg-white file:text-black hover:file:bg-gray-200 cursor-pointer">
+    </div>
+
+    <div class="flex gap-16 pb-12 w-max">
+
+        <!-- Contenedor 1 -->
+        <div class="flex flex-col gap-4">
+            <div class="story-container">
+                <div id="story-1" class="story shrink-0 bg-black relative overflow-hidden brutalist-border flex flex-col justify-between p-20">
+                    <img src="1.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-50 grayscale" onerror="this.src='https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop'" crossorigin="anonymous">
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/90"></div>
+                    
+                    <div class="relative z-10 w-full flex justify-between items-start">
+                        <span class="text-white font-black text-6xl tracking-tighter">BUILD.</span>
+                        <span class="bg-white text-black font-black text-3xl px-8 py-4 uppercase tracking-widest border-[6px] border-black">Actitud</span>
+                    </div>
+
+                    <div class="relative z-10">
+                        <h2 class="text-white font-black text-[12rem] leading-[0.85] uppercase tracking-tighter mb-12">
+                            Entrená<br>En<br>Serio.
+                        </h2>
+                        <div class="w-40 h-4 bg-white mb-10"></div>
+                        <p class="text-white font-bold uppercase tracking-widest text-4xl leading-snug">No es un gimnasio.<br>Es un centro de rendimiento.</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="descargar('story-1', 'build-historia-1')" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-500">📥 Descargar PNG (Alta Calidad)</button>
+        </div>
+
+        <!-- Contenedor 2 -->
+        <div class="flex flex-col gap-4">
+            <div class="story-container">
+                <div id="story-2" class="story shrink-0 bg-black relative overflow-hidden brutalist-border flex flex-col justify-between p-20">
+                    <img src="2.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-50 grayscale" onerror="this.src='https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1470&auto=format&fit=crop'" crossorigin="anonymous">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/40"></div>
+                    
+                    <div class="relative z-10 w-full flex justify-end">
+                        <span class="text-white font-black text-6xl tracking-tighter">BUILD.</span>
+                    </div>
+
+                    <div class="relative z-10 bg-white text-black p-16 border-[12px] border-black transform -rotate-2">
+                        <h2 class="font-black text-[11rem] leading-none uppercase tracking-tighter mb-8">Dolor =<br>Aviso.</h2>
+                        <p class="font-bold uppercase tracking-wide text-4xl mt-10">Kinesiología y rehabilitación<br>con profesionales.</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="descargar('story-2', 'build-historia-2')" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-500">📥 Descargar PNG (Alta Calidad)</button>
+        </div>
+
+        <!-- Contenedor 3 -->
+        <div class="flex flex-col gap-4">
+            <div class="story-container">
+                <div id="story-3" class="story shrink-0 bg-white relative overflow-hidden brutalist-border border-black-brutalist flex flex-col justify-between p-20">
+                    <img src="3.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-30 grayscale" onerror="this.src='https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1469&auto=format&fit=crop'" crossorigin="anonymous">
+                    
+                    <div class="relative z-10 w-full">
+                        <span class="text-black font-black text-6xl tracking-tighter">BUILD.</span>
+                    </div>
+
+                    <div class="relative z-10">
+                        <h2 class="text-black font-black text-[15rem] leading-[0.85] uppercase tracking-tighter mb-12">
+                            Todo<br>En Un<br>Lugar.
+                        </h2>
+                        <div class="flex flex-col gap-6 mt-16">
+                            <span class="bg-black text-white font-black uppercase tracking-widest text-3xl px-8 py-5 w-max">Entrenamiento</span>
+                            <span class="bg-black text-white font-black uppercase tracking-widest text-3xl px-8 py-5 w-max">Kinesiología</span>
+                            <span class="bg-black text-white font-black uppercase tracking-widest text-3xl px-8 py-5 w-max">Nutrición</span>
+                            <span class="bg-black text-white font-black uppercase tracking-widest text-3xl px-8 py-5 w-max">Medicina</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="descargar('story-3', 'build-historia-3')" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-500">📥 Descargar PNG (Alta Calidad)</button>
+        </div>
+
+        <!-- Contenedor 4 -->
+        <div class="flex flex-col gap-4">
+            <div class="story-container">
+                <div id="story-4" class="story shrink-0 bg-black relative overflow-hidden brutalist-border flex flex-col justify-center items-center p-20 text-center">
+                    <img src="4.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-40 grayscale" onerror="this.src='https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1470&auto=format&fit=crop'" crossorigin="anonymous">
+                    <div class="absolute inset-0 bg-black/60"></div>
+                    
+                    <div class="relative z-10 w-full mb-auto text-left">
+                        <span class="text-white font-black text-6xl tracking-tighter">BUILD.</span>
+                    </div>
+
+                    <div class="relative z-10 w-full">
+                        <div class="text-stroke text-[14rem] leading-[0.8] tracking-tighter uppercase mb-8">Agenda</div>
+                        <h2 class="text-white font-black text-[13rem] leading-[0.85] uppercase tracking-tighter mb-16">
+                            Abierta
+                        </h2>
+                        <div class="bg-white text-black font-black text-5xl uppercase tracking-widest px-16 py-8 border-[12px] border-black inline-block transform rotate-2">
+                            LA PLATA
+                        </div>
+                    </div>
+
+                    <div class="relative z-10 mt-auto">
+                        <p class="text-white font-bold uppercase tracking-widest text-3xl">Link en la bio para turnos</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="descargar('story-4', 'build-historia-4')" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-500">📥 Descargar PNG (Alta Calidad)</button>
+        </div>
+
+        <!-- Contenedor 5 -->
+        <div class="flex flex-col gap-4">
+            <div class="story-container">
+                <div id="story-5" class="story shrink-0 bg-black relative overflow-hidden brutalist-border flex flex-col justify-between p-20">
+                    <img src="5.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-50 grayscale" onerror="this.src='https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=1469&auto=format&fit=crop'" crossorigin="anonymous">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                    
+                    <div class="relative z-10 w-full">
+                        <h2 class="text-white font-black text-[9.5rem] leading-[0.85] uppercase tracking-tighter">
+                            La atención<br>es centrada<br>en vos.
+                        </h2>
+                    </div>
+
+                    <div class="relative z-10 text-right w-full">
+                        <p class="text-white font-bold uppercase tracking-widest text-3xl mb-8 text-right ml-auto max-w-[500px]">Atención centrada en la persona. Equipo multidisciplinario.</p>
+                        <span class="text-white font-black text-[8rem] tracking-tighter">BUILD.</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="descargar('story-5', 'build-historia-5')" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-500">📥 Descargar PNG (Alta Calidad)</button>
+        </div>
+
+    </div>
+
+    <script>
+        function descargar(elementId, nombre) {
+            const originalEl = document.getElementById(elementId);
+            
+            htmlToImage.toPng(originalEl, {
+                pixelRatio: 1,
+                canvasWidth: 1080,
+                canvasHeight: 1920,
+                style: {
+                    transform: 'none', /* Forzamos a quitar el achique al momento de guardar */
+                    margin: '0'
+                }
+            })
+            .then(function (dataUrl) {
+                const link = document.createElement('a');
+                link.download = nombre + '.png';
+                link.href = dataUrl;
+                link.click();
+            })
+            .catch(function (error) {
+                alert("Hubo un error al generar la imagen. Prueba limpiar la caché.");
+            });
+        }
+
+        // Nuevo sistema infalible de carga de imágenes
+        document.getElementById('image-loader').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            const images = document.querySelectorAll('.story img');
+            
+            files.forEach((file, index) => {
+                if(images[index]) {
+                    images[index].src = URL.createObjectURL(file);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
