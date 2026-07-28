@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Canje - Build (staff)</title><script src="https://cdn.tailwindcss.com"></script>
+<style>body{background:#111;color:#fff;font-family:sans-serif}</style></head>
+<body class="max-w-md mx-auto px-6 py-12">
+  <h1 class="text-2xl font-black mb-6">Canje de cupones — Build</h1>
+  <input id="pass" type="password" placeholder="Contraseña staff" class="w-full mb-4 px-4 py-3 rounded bg-white text-black" />
+  <input id="code" placeholder="CÓDIGO (BUILD-XXXXXX)" class="w-full mb-3 px-4 py-3 rounded bg-white text-black uppercase" />
+  <div class="flex gap-2">
+    <button id="lookup" class="flex-1 bg-white text-black font-black py-3 rounded">Buscar</button>
+    <button id="mark" class="flex-1 bg-[#A6D60A] text-black font-black py-3 rounded">Marcar usado</button>
+  </div>
+  <div id="out" class="mt-6 text-lg"></div>
+  <a id="export" href="#" class="block mt-8 underline text-sm text-gray-400">Descargar contactos (CSV)</a>
+  <script>
+    const $ = (id)=>document.getElementById(id);
+    const tok = ()=>$('pass').value;
+    async function call(path){ const r = await fetch(path,{method:'POST',headers:{'x-staff-token':tok(),'content-type':'application/json'},body:JSON.stringify({code:$('code').value.trim().toUpperCase()})}); if(r.status===401){$('out').textContent='Contraseña incorrecta';return null;} return r.json(); }
+    $('lookup').onclick = async()=>{ const d=await call('/api/redeem/lookup'); if(!d)return; $('out').innerHTML = d.found ? `<b>${d.name}</b> — ${d.discountPct}% — estado: <b>${d.status}</b> — vence ${new Date(d.expiresAt).toLocaleDateString('es-AR')}` : 'No existe ese código'; };
+    $('mark').onclick = async()=>{ const d=await call('/api/redeem/mark'); if(!d)return; $('out').innerHTML = d.ok ? `✅ Marcado usado (${d.discountPct}% para ${d.name})` : `❌ ${d.reason}`; };
+    $('export').onclick = async(e)=>{ e.preventDefault(); const r=await fetch('/api/export',{headers:{'x-staff-token':tok()}}); if(r.status===401){$('out').textContent='Contraseña incorrecta';return;} const b=await r.blob(); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='contactos-build.csv'; a.click(); };
+  </script>
+</body></html>
