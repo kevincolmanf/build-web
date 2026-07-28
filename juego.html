@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ganá tu descuento - Build</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { background:#111; color:#fff; font-family:'Montserrat',sans-serif; }
+    .acid { color:#A6D60A; } .bg-acid { background:#A6D60A; }
+    .hidden { display:none; }
+    .rec-dot { width:14px;height:14px;border-radius:50%;background:#A6D60A;display:inline-block; animation:pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center px-6 py-10 text-center">
+  <a href="/" class="fixed top-4 left-4 font-black text-xl">BUILD.</a>
+
+  <!-- Vista 1: Bienvenida -->
+  <section id="v-welcome" class="max-w-md">
+    <h1 class="text-4xl md:text-5xl font-black uppercase leading-none mb-4">Contá tu <span class="acid">tip</span> y ganá</h1>
+    <p class="font-bold text-gray-300 mb-8">Dejanos un audio con tu mejor consejo de entrenamiento o salud y llevate <span class="acid">5% a 10%</span> en suplementos y dietética. ¡Todos ganan!</p>
+    <button id="btn-start" class="bg-acid text-black font-black uppercase text-xl px-8 py-4 rounded-full">Empezar</button>
+    <p class="text-xs text-gray-500 mt-6">Válido con compra mínima. <a href="/bases-y-condiciones.html" class="underline">Bases y condiciones</a>.</p>
+  </section>
+
+  <!-- Vista 2: Datos + Grabar -->
+  <section id="v-record" class="hidden max-w-md w-full">
+    <input id="in-name" placeholder="TU NOMBRE" class="w-full mb-3 px-4 py-3 rounded-xl bg-white text-black font-bold uppercase" />
+    <input id="in-phone" placeholder="TU WHATSAPP (EJ. 221...)" inputmode="tel" class="w-full mb-3 px-4 py-3 rounded-xl bg-white text-black font-bold uppercase" />
+    <label class="flex items-start gap-2 text-left text-xs text-gray-400 mb-6">
+      <input id="in-consent" type="checkbox" class="mt-1" />
+      <span>Acepto que Build guarde mi contacto y me escriba con novedades. <a href="/bases-y-condiciones.html" class="underline">Bases y condiciones</a>.</span>
+    </label>
+    <div class="mb-4">
+      <button id="btn-rec" class="bg-acid text-black font-black uppercase px-6 py-6 rounded-full text-lg w-full">🎤 Grabar mi tip</button>
+      <p id="rec-status" class="text-sm text-gray-400 mt-3"></p>
+      <audio id="preview" controls class="hidden w-full mt-3"></audio>
+    </div>
+    <button id="btn-send" class="hidden bg-white text-black font-black uppercase px-8 py-4 rounded-full w-full">Enviar y ver mi premio</button>
+    <p id="rec-error" class="text-red-400 text-sm mt-3"></p>
+  </section>
+
+  <!-- Vista 3: Procesando -->
+  <section id="v-loading" class="hidden">
+    <span class="rec-dot"></span>
+    <p class="font-black uppercase text-2xl mt-4">Analizando tu tip…</p>
+  </section>
+
+  <!-- Vista 4: Resultado -->
+  <section id="v-result" class="hidden max-w-md">
+    <p id="res-feedback" class="font-bold text-lg mb-6"></p>
+    <div id="res-prize" class="hidden">
+      <p class="uppercase text-gray-400 font-bold text-sm">Ganaste</p>
+      <p class="text-7xl font-black acid leading-none mb-4"><span id="res-pct"></span>%</p>
+      <div class="bg-white text-black rounded-2xl p-6 mb-4">
+        <p class="uppercase text-xs font-bold text-gray-500">Tu código</p>
+        <p id="res-code" class="text-3xl font-black tracking-wider"></p>
+      </div>
+      <p class="text-sm text-gray-400">Mostralo en el mostrador de Build. Vence el <span id="res-exp"></span>. <span id="res-min"></span></p>
+    </div>
+  </section>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const show = (id) => ['v-welcome','v-record','v-loading','v-result'].forEach(v => $(v).classList.toggle('hidden', v !== id));
+
+    $('btn-start').onclick = () => show('v-record');
+
+    const MAX_SECONDS = 60;
+    let mediaRecorder, chunks = [], audioBlob = null, autoStop = null, recording = false;
+    async function startRec() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        chunks = [];
+        mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          audioBlob = new Blob(chunks, { type: 'audio/webm' });
+          $('preview').src = URL.createObjectURL(audioBlob);
+          $('preview').classList.remove('hidden');
+          $('btn-send').classList.remove('hidden');
+          stream.getTracks().forEach(t => t.stop());
+        };
+        mediaRecorder.start();
+        recording = true;
+        $('btn-rec').textContent = '⏹ Terminar';
+        $('rec-status').innerHTML = '<span class="rec-dot"></span> Grabando… (máx 60s)';
+        autoStop = setTimeout(stopRec, MAX_SECONDS * 1000);
+      } catch (e) {
+        $('rec-error').textContent = 'No pudimos acceder al micrófono. Habilitalo y probá de nuevo.';
+      }
+    }
+    function stopRec() {
+      if (mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); }
+      clearTimeout(autoStop);
+      recording = false;
+      $('btn-rec').textContent = '🎤 Regrabar';
+      $('rec-status').textContent = 'Escuchá tu audio o regrabá.';
+    }
+    $('btn-rec').addEventListener('click', () => { recording ? stopRec() : startRec(); });
+
+    $('btn-send').onclick = async () => {
+      $('rec-error').textContent = '';
+      const name = $('in-name').value.trim();
+      const phone = $('in-phone').value.trim();
+      const consent = $('in-consent').checked;
+      if (!name || !phone) { $('rec-error').textContent = 'Completá nombre y WhatsApp.'; return; }
+      if (!consent) { $('rec-error').textContent = 'Tenés que aceptar las condiciones.'; return; }
+      if (!audioBlob) { $('rec-error').textContent = 'Grabá tu tip primero.'; return; }
+      show('v-loading');
+      const fd = new FormData();
+      fd.append('name', name); fd.append('phone', phone); fd.append('consent', 'true');
+      fd.append('audio', audioBlob, 'tip.webm');
+      try {
+        const res = await fetch('/api/play', { method: 'POST', body: fd });
+        const data = await res.json();
+        renderResult(data);
+      } catch (e) { renderResult({ status: 'error', message: 'Ups, probá de nuevo.' }); }
+    };
+
+    function renderResult(d) {
+      show('v-result');
+      $('res-prize').classList.add('hidden');
+      if (d.status === 'won') {
+        $('res-feedback').textContent = d.feedback || '¡Gracias por tu tip!';
+        $('res-pct').textContent = d.discountPct;
+        $('res-code').textContent = d.code;
+        $('res-exp').textContent = new Date(d.expiresAt).toLocaleDateString('es-AR');
+        $('res-min').textContent = d.minPurchaseArs ? `Compra mínima $${d.minPurchaseArs}.` : '';
+        $('res-prize').classList.remove('hidden');
+      } else if (d.status === 'cooldown') {
+        $('res-feedback').textContent = `¡Ya jugaste! Podés volver a participar el ${new Date(d.nextAllowedAt).toLocaleDateString('es-AR')}.`;
+      } else if (d.status === 'offtopic') {
+        $('res-feedback').textContent = d.feedback || 'Contanos un tip real de entrenamiento o salud y ganás 😉';
+      } else if (d.status === 'ended') {
+        $('res-feedback').textContent = 'La promo terminó por ahora. ¡Gracias por participar!';
+      } else {
+        $('res-feedback').textContent = d.message || 'Ups, probá de nuevo en un ratito.';
+      }
+    }
+  </script>
+</body>
+</html>
