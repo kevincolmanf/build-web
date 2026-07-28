@@ -35,10 +35,13 @@
         }
     </script>
     <style>
-        body { 
-            background-color: #111; 
-            color: white; 
-            overflow-x: hidden; 
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        body {
+            background-color: #111;
+            color: white;
         }
         
         .nav-transition { transition: all 0.3s ease; }
@@ -216,7 +219,7 @@
     </div>
 
     <!-- Vicio Marquee -->
-    <div class="w-full bg-white text-black py-4 overflow-hidden whitespace-nowrap relative z-30 border-y-4 border-black transform -rotate-1 scale-105 origin-left shadow-2xl">
+    <div class="w-full bg-white text-black py-4 overflow-hidden whitespace-nowrap relative z-30 border-y-4 border-black transform -rotate-1 scale-y-110 origin-center shadow-2xl">
         <div class="animate-marquee inline-block font-black text-4xl md:text-6xl tracking-tighter uppercase">
             ATENCIÓN CENTRADA • EQUIPO INTERDISCIPLINARIO • HEALTH & PERFORMANCE • 
             ATENCIÓN CENTRADA • EQUIPO INTERDISCIPLINARIO • HEALTH & PERFORMANCE • 
