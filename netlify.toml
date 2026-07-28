@@ -1,0 +1,23 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/play"
+  to = "/.netlify/functions/play"
+  status = 200
+[[redirects]]
+  from = "/api/redeem/lookup"
+  to = "/.netlify/functions/redeem-lookup"
+  status = 200
+[[redirects]]
+  from = "/api/redeem/mark"
+  to = "/.netlify/functions/redeem-mark"
+  status = 200
+[[redirects]]
+  from = "/api/export"
+  to = "/.netlify/functions/export"
+  status = 200
